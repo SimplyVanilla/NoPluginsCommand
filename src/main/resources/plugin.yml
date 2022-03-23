@@ -1,0 +1,6 @@
+name: NoPluginsCommand
+version: @version@
+main: net.simplyvanilla.NoPluginsCommand
+authors: [BGHDDevelopmentLLC]
+description: Blocks /plugin, /about, /version, and more!
+website: https://bghddevelopment.com
