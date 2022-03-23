@@ -5,11 +5,11 @@ plugins {
 }
 
 group 'net.simplyvanilla'
-version '1.1-SNAPSHOT'
-description 'Blocks /plugin, /about, /version, and more!'
+version '0.1.0'
 
-sourceCompatibility = 17
-targetCompatibility = 17
+java {
+  toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
 }
 
 processResources {

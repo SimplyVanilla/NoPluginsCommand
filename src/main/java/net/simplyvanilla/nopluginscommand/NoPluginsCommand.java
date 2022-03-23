@@ -1,4 +1,4 @@
-package net.simplyvanilla;
+package net.simplyvanilla.nopluginscommand;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
