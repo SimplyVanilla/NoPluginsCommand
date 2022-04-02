@@ -39,7 +39,6 @@ public final class NoPluginsCommand extends JavaPlugin implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         String buffer = event.getBuffer().trim().substring(1);
-        event.getSender().sendMessage(buffer);
 
         if (NO_AUTO_COMPLETE.contains(buffer)) {
             event.getCompletions().clear();
