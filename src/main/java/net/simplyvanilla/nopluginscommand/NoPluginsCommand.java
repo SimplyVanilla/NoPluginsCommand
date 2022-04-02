@@ -6,12 +6,14 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
-    private static final List<String> COMMANDS = Arrays.asList("?", "pl", "about", "version", "ver", "plugins", "bukkit:?", "bukkit:pl", "bukkit:about", "bukkit:version", "bukkit:ver", "bukkit:plugins", "minecraft:pl", "minecraft:plugins", "minecraft:about", "minecraft:version", "minecraft:ver");
-    private static final List<String> NO_AUTO_COMPLETE = new ArrayList<>(COMMANDS); // or Arrays.asList("command", "command2");
+    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList("?", "pl", "about", "version", "ver", "plugins", "bukkit:?", "bukkit:pl", "bukkit:about", "bukkit:version", "bukkit:ver", "bukkit:plugins", "minecraft:pl", "minecraft:plugins", "minecraft:about", "minecraft:version", "minecraft:ver"));
+    private static final Set<String> NO_AUTO_COMPLETE = new HashSet<>(COMMANDS); // or Arrays.asList("command", "command2");
 
     @Override
     public void onEnable() {
@@ -20,14 +22,18 @@ public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onCommandUse(PlayerCommandPreprocessEvent event) {
-        String[] arrCommand = event.getMessage().toLowerCase().split(" ", 2);
+        String command = event.getMessage().toLowerCase().split(" ", 2)[0];
 
-        for (String command : COMMANDS) {
-            if (arrCommand[0].equalsIgnoreCase("/" + command)) {
-                event.setCancelled(true);
-                return;
-            }
+        if (command.length() == 1) { // Command is only /
+            return;
         }
+
+        command = command.substring(1);
+
+        if (COMMANDS.contains(command)) {
+            event.setCancelled(true);
+        }
+
     }
 
     @EventHandler
