@@ -12,7 +12,7 @@ import java.util.Set;
 
 public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
-    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList("?", "pl", "about", "version", "ver", "plugins", "bukkit:?", "bukkit:pl", "bukkit:about", "bukkit:version", "bukkit:ver", "bukkit:plugins", "minecraft:pl", "minecraft:plugins", "minecraft:about", "minecraft:version", "minecraft:ver"));
+    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList("?", "pl", "about", "version", "ver", "plugins", "bukkit:?", "bukkit:pl", "bukkit:about", "bukkit:version", "bukkit:ver", "bukkit:plugins", "minecraft:pl", "minecraft:plugins", "minecraft:about", "minecraft:version", "minecraft:ver", "icanhasbukkit"));
     private static final Set<String> NO_AUTO_COMPLETE = new HashSet<>(COMMANDS); // or Arrays.asList("command", "command2");
 
     @Override
