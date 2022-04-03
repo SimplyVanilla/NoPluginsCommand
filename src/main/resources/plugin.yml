@@ -1,4 +1,9 @@
-main: net.simplyvanilla.nopluginscommand.NoPluginsCommand
 name: NoPluginsCommand
+main: net.simplyvanilla.nopluginscommand.NoPluginsCommand
+
 version: @version@
+author: SimplyVanilla
+description: Hard-disable commands for Anarchy Servers.
+website: https://github.com/SimplyVanilla/NoPluginsCommand
+
 api-version: 1.18
