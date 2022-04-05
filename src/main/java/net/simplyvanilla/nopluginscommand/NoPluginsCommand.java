@@ -1,23 +1,62 @@
 package net.simplyvanilla.nopluginscommand;
 
+import net.simplyvanilla.nopluginscommand.command.CustomTextCommandExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
-    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList("?", "pl", "about", "version", "ver", "plugins", "bukkit:?", "bukkit:pl", "bukkit:about", "bukkit:version", "bukkit:ver", "bukkit:plugins", "minecraft:pl", "minecraft:plugins", "minecraft:about", "minecraft:version", "minecraft:ver", "icanhasbukkit"));
-    private static final Set<String> NO_AUTO_COMPLETE = new HashSet<>(COMMANDS); // or Arrays.asList("command", "command2");
+    private Set<String> commandWhitelist;
 
     @Override
     public void onEnable() {
+        File dataFolder = getDataFolder();
+
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+
+        Path configPath = dataFolder.toPath().resolve("config.yml");
+        Path customTextPath = dataFolder.toPath().resolve("custom_text.yml");
+
+        if (!Files.exists(configPath)) {
+            try {
+                Files.copy(getClassLoader().getResourceAsStream("config.yml"), configPath);
+            } catch (IOException e) {
+                getLogger().severe("Could not copy default config.");
+                e.printStackTrace();
+            }
+        }
+
+        if (!Files.exists(customTextPath)) {
+            try {
+                Files.copy(getClassLoader().getResourceAsStream("custom_text.yml"), customTextPath);
+            } catch (IOException e) {
+                getLogger().severe("Could not copy custom text example");
+                e.printStackTrace();
+            }
+        }
+
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configPath.toFile());
+        FileConfiguration customTextConfig = YamlConfiguration.loadConfiguration(customTextPath.toFile());
+
+        this.commandWhitelist = new HashSet<>(config.getStringList("whitelist"));
+
         getServer().getPluginManager().registerEvents(this, this);
+        getCommand("customtext").setExecutor(new CustomTextCommandExecutor(customTextConfig));
     }
 
     @EventHandler
@@ -30,7 +69,7 @@ public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
         command = command.substring(1);
 
-        if (COMMANDS.contains(command)) {
+        if (!commandWhitelist.contains(command)) {
             event.setCancelled(true);
         }
 
@@ -38,11 +77,16 @@ public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
-        String buffer = event.getBuffer().trim().substring(1);
+        String buffer = event.getBuffer().trim().split(" +", 2)[0].substring(1);
 
-        if (NO_AUTO_COMPLETE.contains(buffer)) {
+        if (!commandWhitelist.contains(buffer.toLowerCase())) {
             event.getCompletions().clear();
         }
+    }
+
+    @EventHandler
+    public void onServerSendingCommandsToPlayer(PlayerCommandSendEvent event) {
+        event.getCommands().removeIf(command -> !commandWhitelist.contains(command));
     }
 
 }

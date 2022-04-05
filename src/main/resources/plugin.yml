@@ -7,3 +7,7 @@ description: Hard-disable commands for Anarchy Servers.
 website: https://github.com/SimplyVanilla/NoPluginsCommand
 
 api-version: 1.18
+
+commands:
+  customtext:
+    description: Allow for admin defined messages

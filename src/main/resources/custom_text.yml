@@ -1,0 +1,16 @@
+# Texts can have a page-size property and lines
+help:
+  page-size: 5
+  lines:
+    - first
+    - second
+    - third
+    - fourth
+    - fith
+    - sixth
+# Only lines is required tho
+simple:
+  lines:
+    - This command has only three
+    - lines
+    - and no pages
