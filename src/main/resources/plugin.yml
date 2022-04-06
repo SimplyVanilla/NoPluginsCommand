@@ -1,17 +1,17 @@
-name: NoPluginsCommand
 main: net.simplyvanilla.nopluginscommand.NoPluginsCommand
-
+name: NoPluginsCommand
+description: Obfuscate commands for Anarchy servers.
 version: @version@
-author: SimplyVanilla
-description: Hard-disable commands for Anarchy Servers.
-website: https://github.com/SimplyVanilla/NoPluginsCommand
-
 api-version: 1.18
+
+author: Simply Vanilla
+website: https://github.com/SimplyVanilla/NoPluginsCommand
 
 commands:
   customtext:
     description: Allow for admin defined messages
   suicide:
-    description: Suicide a player
+    description: Take the easy way out.
+    usage: 'Usage: /<command>'
     aliases:
       - kill
