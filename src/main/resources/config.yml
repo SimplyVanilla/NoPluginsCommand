@@ -1,3 +1,5 @@
 whitelist:
   - info
   - shop
+# %name% is the name of the player who committed suicide
+suicide-broadcst: "&7The player &e%name% &4commited suicide"

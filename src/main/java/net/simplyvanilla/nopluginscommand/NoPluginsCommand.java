@@ -1,6 +1,8 @@
 package net.simplyvanilla.nopluginscommand;
 
 import net.simplyvanilla.nopluginscommand.command.CustomTextCommandExecutor;
+import net.simplyvanilla.nopluginscommand.command.SuicideCommandExecutor;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public final class NoPluginsCommand extends JavaPlugin implements Listener {
@@ -52,6 +55,15 @@ public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(configPath.toFile());
         FileConfiguration customTextConfig = YamlConfiguration.loadConfiguration(customTextPath.toFile());
+
+        String suicideBroadcast = config.getString("suicide-broadcast");
+
+        if (suicideBroadcast != null) {
+            suicideBroadcast = ChatColor.translateAlternateColorCodes('&', suicideBroadcast.trim());
+        }
+
+        SuicideCommandExecutor suicideCommandExecutor = new SuicideCommandExecutor(suicideBroadcast);
+        getCommand("suicide").setExecutor(suicideCommandExecutor);
 
         this.commandWhitelist = new HashSet<>(config.getStringList("whitelist"));
 
