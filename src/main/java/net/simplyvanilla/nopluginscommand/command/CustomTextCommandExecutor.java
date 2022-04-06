@@ -1,5 +1,6 @@
 package net.simplyvanilla.nopluginscommand.command;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -61,7 +62,9 @@ public class CustomTextCommandExecutor implements CommandExecutor {
             lines = lines.subList(startIndex, endIndex);
         }
 
-        lines.forEach(sender::sendMessage);
+        lines.stream()
+            .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+            .forEach(sender::sendMessage);
 
         return true;
     }
