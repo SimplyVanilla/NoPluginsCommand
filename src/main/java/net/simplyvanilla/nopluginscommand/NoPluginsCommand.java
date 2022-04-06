@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 public final class NoPluginsCommand extends JavaPlugin implements Listener {
@@ -33,7 +32,7 @@ public final class NoPluginsCommand extends JavaPlugin implements Listener {
         }
 
         Path configPath = dataFolder.toPath().resolve("config.yml");
-        Path customTextPath = dataFolder.toPath().resolve("custom_text.yml");
+        Path customTextPath = dataFolder.toPath().resolve("customtext.yml");
 
         if (!Files.exists(configPath)) {
             try {
@@ -46,7 +45,7 @@ public final class NoPluginsCommand extends JavaPlugin implements Listener {
 
         if (!Files.exists(customTextPath)) {
             try {
-                Files.copy(getClassLoader().getResourceAsStream("custom_text.yml"), customTextPath);
+                Files.copy(getClassLoader().getResourceAsStream("customtext.yml"), customTextPath);
             } catch (IOException e) {
                 getLogger().severe("Could not copy custom text example");
                 e.printStackTrace();
