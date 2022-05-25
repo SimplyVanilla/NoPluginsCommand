@@ -1,4 +1,5 @@
 # Texts can have a page-size property and lines
+# They can also have a show-in-help, help-description, help-needs-op and full-help-text property
 help:
   page-size: 5
   lines:
@@ -10,7 +11,20 @@ help:
     - sixth
 # Only lines is required tho
 simple:
+  show-in-help: true
+  help-description: "This is a simple example"
+  help-full-text:
+    - First line
+    - Second line
   lines:
     - This command has only three
     - lines
     - and no pages
+admintext:
+  show-in-help: true
+  help-description: "This is admin info"
+  help-needs-op: true
+  help-full-text:
+    - This command shows admin commands
+  lines:
+    - /someadmincommand
