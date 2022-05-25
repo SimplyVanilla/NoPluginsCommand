@@ -1,5 +1,5 @@
 # Texts can have a page-size property and lines
-# They can also have a show-in-help, help-description, help-needs-op and full-help-text property
+# They can also have a show-in-help, help-description, help-needs-op and help-full-text property
 help:
   page-size: 5
   lines:
