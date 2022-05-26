@@ -2,7 +2,9 @@ package net.simplyvanilla.nopluginscommand;
 
 import net.simplyvanilla.nopluginscommand.command.CustomTextCommandExecutor;
 import net.simplyvanilla.nopluginscommand.command.SuicideCommandExecutor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -58,6 +61,18 @@ public final class NoPluginsCommand extends JavaPlugin {
         }
 
         this.customTextConfigFile = getConfigFile("customtext.yml");
+        for (String key : customTextConfigFile.getKeys(false)) {
+            String description = customTextConfigFile.getString(key + ".help-description", "");
+            if (description.isEmpty()) {
+                continue;
+            }
+
+            boolean needsOp = customTextConfigFile.getBoolean(key + ".help-needs-op", false);
+            List<String> fullText = customTextConfigFile.getStringList(key + ".help-full-text");
+
+            Bukkit.getHelpMap().addTopic(new SimpleHelpTopic("/" + key, description,
+                String.join("\n", fullText), needsOp ? CommandSender::isOp : cs -> true));
+        }
     }
 
     public FileConfiguration getConfigFile(String fileName) {
