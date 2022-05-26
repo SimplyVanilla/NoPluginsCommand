@@ -62,13 +62,12 @@ public final class NoPluginsCommand extends JavaPlugin {
 
         this.customTextConfigFile = getConfigFile("customtext.yml");
         for (String key : customTextConfigFile.getKeys(false)) {
-            boolean showInHelp = customTextConfigFile.getBoolean(key + ".show-in-help", false);
-            if (!showInHelp) {
+            String description = customTextConfigFile.getString(key + ".help-description", "");
+            if (description.isEmpty()) {
                 continue;
             }
 
             boolean needsOp = customTextConfigFile.getBoolean(key + ".help-needs-op", false);
-            String description = customTextConfigFile.getString(key + ".help-description", "This command has no description");
             List<String> fullText = customTextConfigFile.getStringList(key + ".help-full-text");
 
             Bukkit.getHelpMap().addTopic(new SimpleHelpTopic("/" + key, description,
