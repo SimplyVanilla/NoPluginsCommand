@@ -1,10 +1,16 @@
 package net.simplyvanilla.nopluginscommand;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.simplyvanilla.nopluginscommand.command.CustomTextCommandExecutor;
 import net.simplyvanilla.nopluginscommand.command.SuicideCommandExecutor;
+import net.simplyvanilla.nopluginscommand.opdata.OpData;
+import net.simplyvanilla.nopluginscommand.opdata.OpDataJsonDeserializer;
+import net.simplyvanilla.nopluginscommand.opdata.OpDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -13,15 +19,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.logging.Level;
 
 public final class NoPluginsCommand extends JavaPlugin {
 
-    private final Set<String> commandWhitelist = new HashSet<>();
+    private static final Path OP_DATA_PATH = Paths.get("ops.json");
+
+    private final Map<Integer, Set<String>> commandWhitelists = new HashMap<>();
     private String suicideBroadcast;
     private FileConfiguration customTextConfigFile;
 
@@ -36,7 +42,12 @@ public final class NoPluginsCommand extends JavaPlugin {
     public void onEnable() {
         this.reloadConfig();
 
-        getServer().getPluginManager().registerEvents(new EventsListener(), this);
+        Gson gson = new GsonBuilder()
+            .registerTypeAdapter(OpData.class, new OpDataJsonDeserializer())
+            .create();
+        OpDataManager opDataManager = new OpDataManager(OP_DATA_PATH, gson);
+
+        getServer().getPluginManager().registerEvents(new EventsListener(opDataManager), this);
 
         getCommand("suicide").setExecutor(new SuicideCommandExecutor());
         getCommand("customtext").setExecutor(new CustomTextCommandExecutor());
@@ -46,14 +57,34 @@ public final class NoPluginsCommand extends JavaPlugin {
     public void onDisable() {
         HandlerList.unregisterAll(this);
 
-        this.commandWhitelist.clear();
+        this.commandWhitelists.clear();
         this.suicideBroadcast = null;
     }
 
     @Override
     public void reloadConfig() {
         FileConfiguration configFile = getConfigFile("config.yml");
-        this.commandWhitelist.addAll(configFile.getStringList("whitelist"));
+
+        try {
+            MemorySection whitelist = (MemorySection) configFile.get("whitelist");
+
+            Set<String> accumulator = new HashSet<>();
+            whitelist.getKeys(false)
+                .stream()
+                .sorted(Comparator.comparingInt(Integer::parseInt))
+                .forEach(key -> {
+                    int level = Integer.parseInt(key);
+
+                    Set<String> result = new HashSet<>(whitelist.getStringList(key));
+                    result.addAll(accumulator);
+                    accumulator.addAll(result);
+
+                    commandWhitelists.put(level, result);
+                });
+        } catch (Exception e) {
+            getLogger().severe("Could not load whitelist");
+            e.printStackTrace();
+        }
 
         this.suicideBroadcast = getConfigFile("config.yml").getString("suicide-broadcast");
         if (this.suicideBroadcast != null) {
@@ -95,8 +126,8 @@ public final class NoPluginsCommand extends JavaPlugin {
         }
     }
 
-    public Set<String> getCommandWhitelist() {
-        return Collections.unmodifiableSet(this.commandWhitelist);
+    public Set<String> getCommandWhitelist(int level) {
+        return Collections.unmodifiableSet(commandWhitelists.getOrDefault(level, Collections.EMPTY_SET));
     }
 
     public String getSuicideBroadcast() {
