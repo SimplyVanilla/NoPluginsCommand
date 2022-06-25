@@ -24,10 +24,17 @@ public class OpDataManager {
     }
 
     private OpData getOpData(Player player) {
-        if (player.isOp() && !opDataMap.containsKey(player.getUniqueId())) {
+        UUID uuid = player.getUniqueId();
+        boolean isOp = player.isOp();
+        boolean contains = opDataMap.containsKey(uuid);
+
+        if (isOp && !contains) {
             loadOpData();
+        } else if (!isOp && contains) {
+            opDataMap.remove(uuid);
         }
-        return opDataMap.get(player.getUniqueId());
+
+        return opDataMap.get(uuid);
     }
 
     public int getPermissionLevel(Player player) {
