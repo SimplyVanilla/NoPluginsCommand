@@ -1,6 +1,19 @@
+# The whitelist is based on Minecraft permission levels
+# For more info see https://minecraft.fandom.com/wiki/Permission_level
+# Each level inherits from the levels below it e.g. level 3
+# inherits from levels 2, 1 and 0
 whitelist:
-  - msg
-  - help
+  0:
+    - msg
+    - help
+  1:
+    - gamemode
+  2:
+    - stop
+  3:
+    - setblock
+  4:
+    - summon
 
 # %name% is the name of the player who committed suicide
 suicide-broadcast: "&7The player &e%name% &4committed suicide"
