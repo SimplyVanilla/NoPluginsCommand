@@ -7,6 +7,7 @@ import net.simplyvanilla.nopluginscommand.opdata.OpDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -60,13 +61,13 @@ public final class NoPluginsCommand extends JavaPlugin {
         FileConfiguration configFile = getConfigFile("config.yml");
 
         try {
-            Map<String, List<String>> whitelist = (Map<String, List<String>>) configFile.get("whitelist");
-            whitelist.forEach((k, v) -> {
-                int level = Integer.parseInt(k);
+            MemorySection whitelist = (MemorySection) configFile.get("whitelist");
+            whitelist.getKeys(false).forEach(key -> {
+                int level = Integer.parseInt(key);
 
-                Set<String> result = new HashSet<>();
+                Set<String> result = new HashSet<>(whitelist.getStringList(key));
                 for (int i = 0; i >= 0; i--) {
-                    List<String> whitelistedForThatLevel = whitelist.get(String.valueOf(i));
+                    List<String> whitelistedForThatLevel = whitelist.getStringList(String.valueOf(i));
 
                     if (whitelistedForThatLevel != null) {
                         result.addAll(whitelistedForThatLevel);
