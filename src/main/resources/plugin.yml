@@ -2,7 +2,7 @@ main: net.simplyvanilla.nopluginscommand.NoPluginsCommand
 name: NoPluginsCommand
 description: Obfuscate commands for Anarchy servers.
 version: @version@
-api-version: 1.18
+api-version: 1.19
 
 author: Simply Vanilla
 website: https://github.com/SimplyVanilla/NoPluginsCommand
