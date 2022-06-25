@@ -3,7 +3,7 @@ package net.simplyvanilla.nopluginscommand.opdata;
 import java.util.Objects;
 import java.util.UUID;
 
-class OpData {
+public class OpData {
 
     private final UUID uuid;
     private final String name;

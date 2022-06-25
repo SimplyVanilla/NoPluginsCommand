@@ -1,5 +1,6 @@
 package net.simplyvanilla.nopluginscommand.opdata;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import org.bukkit.entity.Player;
 
@@ -40,7 +41,7 @@ public class OpDataManager {
 
     private void loadOpData() {
         try (Reader reader = Files.newBufferedReader(opFilePath, StandardCharsets.UTF_8)) {
-            List<OpData> opDataList = gson.fromJson(reader, ArrayList.class);
+            List<OpData> opDataList = gson.fromJson(reader, new TypeToken<ArrayList<OpData>>(){}.getType());
             opDataList.forEach(opData -> opDataMap.put(opData.getUuid(), opData));
         } catch (IOException e) {
             e.printStackTrace();

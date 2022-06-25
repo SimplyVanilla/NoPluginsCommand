@@ -1,8 +1,11 @@
 package net.simplyvanilla.nopluginscommand;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import net.simplyvanilla.nopluginscommand.command.CustomTextCommandExecutor;
 import net.simplyvanilla.nopluginscommand.command.SuicideCommandExecutor;
+import net.simplyvanilla.nopluginscommand.opdata.OpData;
+import net.simplyvanilla.nopluginscommand.opdata.OpDataJsonDeserializer;
 import net.simplyvanilla.nopluginscommand.opdata.OpDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,7 +42,9 @@ public final class NoPluginsCommand extends JavaPlugin {
     public void onEnable() {
         this.reloadConfig();
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+            .registerTypeAdapter(OpData.class, new OpDataJsonDeserializer())
+            .create();
         OpDataManager opDataManager = new OpDataManager(OP_DATA_PATH, gson);
 
         getServer().getPluginManager().registerEvents(new EventsListener(opDataManager), this);
