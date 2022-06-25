@@ -67,20 +67,20 @@ public final class NoPluginsCommand extends JavaPlugin {
 
         try {
             MemorySection whitelist = (MemorySection) configFile.get("whitelist");
-            whitelist.getKeys(false).forEach(key -> {
-                int level = Integer.parseInt(key);
 
-                Set<String> result = new HashSet<>(whitelist.getStringList(key));
-                for (int i = 0; i >= 0; i--) {
-                    List<String> whitelistedForThatLevel = whitelist.getStringList(String.valueOf(i));
+            Set<String> accumulator = new HashSet<>();
+            whitelist.getKeys(false)
+                .stream()
+                .sorted(Comparator.comparingInt(Integer::parseInt))
+                .forEach(key -> {
+                    int level = Integer.parseInt(key);
 
-                    if (whitelistedForThatLevel != null) {
-                        result.addAll(whitelistedForThatLevel);
-                    }
-                }
+                    Set<String> result = new HashSet<>(whitelist.getStringList(key));
+                    result.addAll(accumulator);
+                    accumulator.addAll(result);
 
-                commandWhitelists.put(level, result);
-            });
+                    commandWhitelists.put(level, result);
+                });
         } catch (Exception e) {
             getLogger().severe("Could not load whitelist");
             e.printStackTrace();
