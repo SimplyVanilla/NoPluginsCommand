@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.server.TabCompleteEvent;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 public class EventsListener implements Listener {
