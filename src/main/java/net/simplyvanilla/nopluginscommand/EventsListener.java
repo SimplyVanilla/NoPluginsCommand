@@ -15,7 +15,7 @@ public class EventsListener implements Listener {
 
     @EventHandler
     public void onCommandUse(PlayerCommandPreprocessEvent event) {
-        String command = event.getMessage().toLowerCase().split(" +", 2)[0].replace("/", "");
+        String command = event.getMessage().toLowerCase().split(" +", 2)[0].replace("/", "").replace("//", "");
 
         NoPluginsCommand plugin = NoPluginsCommand.getInstance();
         Command cmd = resolveCommandAlias(command);
@@ -30,7 +30,7 @@ public class EventsListener implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         if (event.getSender() instanceof Player player) {
-            String buffer = event.getBuffer().trim().split(" +", 2)[0].replace("/", "");
+            String buffer = event.getBuffer().trim().split(" +", 2)[0].replace("/", "").replace("//", "");
 
             NoPluginsCommand plugin = NoPluginsCommand.getInstance();
             Command cmd = resolveCommandAlias(buffer);
