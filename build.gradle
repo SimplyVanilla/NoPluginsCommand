@@ -21,11 +21,7 @@ repositories {
     mavenCentral()
 
     maven {
-        url 'https://papermc.io/repo/repository/maven-public/'
-    }
-
-    maven {
-        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+        url 'https://repo.papermc.io/repository/maven-public/'
     }
 }
 
