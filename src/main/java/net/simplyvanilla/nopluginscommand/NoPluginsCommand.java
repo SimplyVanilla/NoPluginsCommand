@@ -56,9 +56,6 @@ public final class NoPluginsCommand extends JavaPlugin {
         this.commandWhitelist.addAll(configFile.getStringList("whitelist"));
 
         this.suicideBroadcast = getConfigFile("config.yml").getString("suicide-broadcast");
-        if (this.suicideBroadcast != null) {
-            this.suicideBroadcast = ChatColor.translateAlternateColorCodes('&', this.suicideBroadcast.trim());
-        }
 
         this.customTextConfigFile = getConfigFile("customtext.yml");
         for (String key : customTextConfigFile.getKeys(false)) {
@@ -84,7 +81,7 @@ public final class NoPluginsCommand extends JavaPlugin {
             try {
                 Files.copy(getClassLoader().getResourceAsStream(fileName), configPath);
             } catch (Exception e) {
-                getLogger().log(Level.SEVERE, "Could not copy '" + fileName + "'", e);
+                getLogger().severe("Could not copy '" + fileName + "' to '" + configPath + "'");
             }
         }
 
