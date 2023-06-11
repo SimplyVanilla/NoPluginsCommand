@@ -3,6 +3,8 @@ name: NoPluginsCommand
 description: Obfuscate commands for Anarchy servers.
 version: @version@
 api-version: 1.19
+depend:
+  - MiniPlaceholders
 
 author: Simply Vanilla
 website: https://github.com/SimplyVanilla/NoPluginsCommand

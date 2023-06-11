@@ -1,5 +1,8 @@
 package net.simplyvanilla.nopluginscommand.command;
 
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
+
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.simplyvanilla.nopluginscommand.NoPluginsCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,9 +17,10 @@ import java.util.List;
 public class CustomTextCommandExecutor implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
+                             @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "Please provide an argument!");
+            sender.sendMessage(miniMessage().deserialize("<red>Please provide an argument!</red>"));
             return false;
         }
 
@@ -27,7 +31,8 @@ public class CustomTextCommandExecutor implements CommandExecutor {
         ConfigurationSection section = customTextConfig.getConfigurationSection(messageName);
 
         if (section == null) {
-            sender.sendMessage(ChatColor.RED + "Please provide a valid argument!");
+            sender.sendMessage(
+                miniMessage().deserialize("<red>Please provide a valid argument!</red>"));
             return false;
         }
 
@@ -37,7 +42,8 @@ public class CustomTextCommandExecutor implements CommandExecutor {
             int itemsPerPage = section.getInt("page-size");
 
             if (itemsPerPage <= 0) {
-                sender.sendMessage(ChatColor.RED + "page-size must greater than 0");
+                sender.sendMessage(
+                    miniMessage().deserialize("<red>page-size must greater than 0</red>"));
                 return false;
             }
 
@@ -47,11 +53,14 @@ public class CustomTextCommandExecutor implements CommandExecutor {
                 try {
                     page = Math.max(0, Integer.parseInt(args[1]) - 1);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(ChatColor.RED + args[1] + " is not a valid number!");
+                    sender.sendMessage(
+                        miniMessage().deserialize("<red><input> is not a valid number</red>",
+                            Placeholder.unparsed("input", args[1])));
                     return false;
                 }
             } else if (args.length > 2) {
-                sender.sendMessage(ChatColor.RED + "Invalid command syntax!");
+                sender.sendMessage(
+                    miniMessage().deserialize("<red>Invalid command syntax!</red>"));
                 return false;
             }
 
@@ -65,7 +74,7 @@ public class CustomTextCommandExecutor implements CommandExecutor {
         }
 
         lines.stream()
-            .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+            .map(miniMessage()::deserialize)
             .forEach(sender::sendMessage);
 
         return true;

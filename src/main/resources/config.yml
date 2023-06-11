@@ -3,4 +3,4 @@ whitelist:
   - help
 
 # %name% is the name of the player who committed suicide
-suicide-broadcast: "&7The player &e%name% &4committed suicide"
+suicide-broadcast: "<gray>The player &e<player_name> &4committed suicide</gray>"
