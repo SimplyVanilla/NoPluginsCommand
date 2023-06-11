@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.server.TabCompleteEvent;
 
 import java.util.Locale;
+import org.jetbrains.annotations.Nullable;
 
 public class EventsListener implements Listener {
 
@@ -21,7 +22,8 @@ public class EventsListener implements Listener {
         Command cmd = resolveCommandAlias(command);
         Player player = event.getPlayer();
 
-        if (cmd == null || (cmd.getPermission() != null && !player.hasPermission(cmd.getPermission()))
+        if (cmd == null ||
+            (cmd.getPermission() != null && !this.playerHasPermission(player, cmd.getPermission()))
             || !plugin.getCommandWhitelist().contains(command)) {
             event.setCancelled(true);
         }
@@ -35,7 +37,8 @@ public class EventsListener implements Listener {
             NoPluginsCommand plugin = NoPluginsCommand.getInstance();
             Command cmd = resolveCommandAlias(buffer);
 
-            if (cmd == null || (cmd.getPermission() != null && !player.hasPermission(cmd.getPermission()))
+            if (cmd == null ||
+                (cmd.getPermission() != null && !this.playerHasPermission(player, cmd.getPermission()))
                 || !plugin.getCommandWhitelist().contains(buffer.toLowerCase())) {
                 event.getCompletions().clear();
             }
@@ -50,7 +53,8 @@ public class EventsListener implements Listener {
         event.getCommands().removeIf(command -> {
             Command cmd = resolveCommandAlias(command);
 
-            return cmd == null || (cmd.getPermission() != null && !player.hasPermission(cmd.getPermission()))
+            return cmd == null ||
+                (cmd.getPermission() != null && !this.playerHasPermission(player, cmd.getPermission()))
                 || !plugin.getCommandWhitelist().contains(command);
         });
     }
@@ -63,6 +67,25 @@ public class EventsListener implements Listener {
         }
 
         return Bukkit.getCommandMap().getCommand(input);
+    }
+
+    private boolean playerHasPermission(Player player, String permission) {
+        if (player.hasPermission(permission)) {
+            return true;
+        }
+
+        if (!permission.contains(";")) {
+            return false;
+        }
+
+        String[] permissions = permission.split(";");
+
+        for (String perm : permissions) {
+            if (player.hasPermission(perm)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
