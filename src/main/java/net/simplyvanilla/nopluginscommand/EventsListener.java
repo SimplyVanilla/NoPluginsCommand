@@ -15,7 +15,7 @@ public class EventsListener implements Listener {
 
     @EventHandler
     public void onCommandUse(PlayerCommandPreprocessEvent event) {
-        String command = event.getMessage().toLowerCase().split(" +", 2)[0].replace("/", "").replace("//", "");
+        String command = event.getMessage().toLowerCase().split(" +", 2)[0].substring(1);
 
         NoPluginsCommand plugin = NoPluginsCommand.getInstance();
         Command cmd = resolveCommandAlias(command);
@@ -30,7 +30,7 @@ public class EventsListener implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent event) {
         if (event.getSender() instanceof Player player) {
-            String buffer = event.getBuffer().trim().split(" +", 2)[0].replace("/", "").replace("//", "");
+            String buffer = event.getBuffer().trim().split(" +", 2)[0].substring(1);
 
             NoPluginsCommand plugin = NoPluginsCommand.getInstance();
             Command cmd = resolveCommandAlias(buffer);
@@ -57,9 +57,11 @@ public class EventsListener implements Listener {
 
     private Command resolveCommandAlias(String input) {
         input = input.toLowerCase(Locale.ROOT);
+
         if (Bukkit.getCommandAliases().containsKey(input)) {
             return resolveCommandAlias(Bukkit.getCommandAliases().get(input)[0].split(" +", 2)[0]);
         }
+
         return Bukkit.getCommandMap().getCommand(input);
     }
 
