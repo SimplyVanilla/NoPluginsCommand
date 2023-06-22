@@ -4,7 +4,6 @@ import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import net.simplyvanilla.nopluginscommand.NoPluginsCommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
